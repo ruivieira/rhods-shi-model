@@ -14,6 +14,7 @@ def status():
 
 @application.route("/predict", methods=["POST"])
 def create_prediction():
-    prediction = model.predict_raw(request)
+    request_data = request.get_json()
+    prediction = model.predict_raw(request_data)
 
     return prediction
