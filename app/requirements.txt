@@ -1,0 +1,5 @@
+cloudevents
+joblib==1.1.0
+numpy
+scikit-learn==1.0.1
+xgboost==1.5.1
