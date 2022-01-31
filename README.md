@@ -16,7 +16,7 @@ From OpenShift, add the application from Git and select `/app` as the context.
 Assuming the route `$ROUTE` to the service, request predictions using
 
 ```shell
-curl -X POST --location "http://rhods-shi-model-ruimvieira-jira-dev.apps.rhods-sb-prod.3sox.p1.openshiftapps.com/predict" \
+curl -X POST --location "$ROUTE/predict" \
     -H "Content-Type: application/json" \
     -d '{
            "specversion": "1.0",
