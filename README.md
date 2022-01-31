@@ -10,6 +10,7 @@ The last cells will save the model in the `joblib` format under `./app/models`.
 ## Deploying the model
 
 From OpenShift, add the application from Git and select `/app` as the context.
+![openshift-add-git](images/openshift-add-git.png)
 
 ## API
 
