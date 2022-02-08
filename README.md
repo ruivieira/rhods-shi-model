@@ -9,6 +9,29 @@ The last cells will save the model in the `joblib` format under `./app/models`.
 
 ## Deploying the model
 
+### Command line
+
+(Optionally) create a new project with
+
+```shell
+$ oc new-project shi
+```
+
+Deploy the model using
+
+```shell
+$ oc new-app https://github.com/ruivieira/rhods-shi-model \
+  --context-dir=/app
+```
+
+Expose the service if needed:
+
+```shell
+$ oc expose svc/rhods-shi-model
+```
+
+### From OpenShift
+
 From OpenShift, add the application from Git and select `/app` as the context.
 ![openshift-add-git](images/openshift-add-git.png)
 
