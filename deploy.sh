@@ -54,8 +54,11 @@ kubectl wait pod --all --for=condition=Ready --timeout=600s -n cert-manager
 log "✨ Install KServe"
 kubectl apply -f https://github.com/kserve/kserve/releases/download/v0.7.0/kserve.yaml
 
+log "Create persistent volume claim"
+kubectl apply -f manifests/pvc.yaml
+
 log "Create persistent volume"
-kubectl apply -f manifests/volume.yaml
+kubectl apply -f manifests/pv.yaml
 
 log "Create model storage pod"
 kubectl apply -f manifests/pv-model-store.yaml

@@ -18,6 +18,13 @@ Start `minikube` with _at least_ 6 CPUs.
 minikube --memory=8192 --cpus=6 --kubernetes-version=v1.22.0 start
 ```
 
+If on macOS use:
+
+```shell
+minikube --driver=hyperkit --memory=8192 --cpus=6 --kubernetes-version=v1.22.0 start
+```
+
+
 Enable `ingress` and `igress-dns` add-ons:
 
 ```shell
@@ -100,7 +107,8 @@ for `KServe` to serve it.
 Create the persistent volume
 
 ```shell
-kubectl apply -f manifests/volume.yaml
+kubectl apply -f manifests/pvc.yaml
+kubectl apply -f manifests/pv.yaml
 ```
 
 Create the model storage pod

@@ -6,5 +6,6 @@ metadata:
     sidecar.istio.io/inject: "false"
 spec:
   predictor:
-    sklearn:
+    xgboost:
+      protocolVersion: "v2"
       storageUri: "pvc://task-pv-claim/model.bst"
