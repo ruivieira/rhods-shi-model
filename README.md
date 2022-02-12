@@ -5,7 +5,7 @@
 From Red Hat Open Data Science (RHODS), clone this project
 and run the [Jupyter notebook](notebooks/model-training.ipynb).
 
-The last cells will save the model in the `joblib` format under `./app/models`.
+The last cells will save the model serialised model under `$PROJECT_ROOT/models`.
 
 ## Deploying the model
 
