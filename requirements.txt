@@ -1,7 +1,11 @@
 # external requirements
+xgboost==1.5.2
 numpy
 scipy
-scikit-learn==1.0.1
+scikit-learn==1.0.2
 pandas
 pssm
 joblib==1.1.0
+jupyterlab==3.2.9
+mlserver
+mlserver-xgboost
