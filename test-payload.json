@@ -1,0 +1,10 @@
+{
+  "inputs": [
+    {
+      "name": "input-0",
+      "shape": [1, 1],
+      "datatype": "FP32",
+      "data": [[6.0]]
+    }
+  ]
+}

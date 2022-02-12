@@ -33,7 +33,7 @@ curl -L https://istio.io/downloadIstio | ISTIO_VERSION=${ISTIO_VERSION} sh -
 istio-${ISTIO_VERSION}/bin/istioctl install -y
 ```
 
-Instal `KNative` CRDs, serving core and Isto support:
+Instal `KNative` CRDs, serving core and `Istio` support:
 
 ```shell
 export KNATIVE_VERSION="v0.26.0"
@@ -113,7 +113,7 @@ Wait for model storage pod, and copy the model file to it, when ready.
 
 ```shell
 kubectl wait --for=condition=ready pod model-store-pod --timeout=60s
-kubectl cp model/model.bst model-store-pod:/pv/model.joblib -c model-store
+kubectl cp model/model.bst model-store-pod:/pv/model.bst -c model-store
 ```
 
 ### InferenceService deployment
@@ -121,5 +121,34 @@ kubectl cp model/model.bst model-store-pod:/pv/model.joblib -c model-store
 Deploy model inference service
 
 ```shell
-kubectl apply -f manifests/sklearn-pvc.yaml
+kubectl apply -f manifests/shi-model-pvc.yaml
+```
+
+You can check the inference service status with 
+
+```shell
+kubectl get inferenceservice shi-model-pvc
+```
+
+### Test prediction
+
+Run the `minikube` tunnel:
+
+```shell
+minikube tunnel
+```
+
+Get the model server host URL
+
+```shell
+export SERVICE_HOSTNAME=$(kubectl get inferenceservice shi-model-pvc -o jsonpath='{.status.url}' | cut -d "/" -f 3)
+# e.g. shi-model-pvc.default.example.com
+```
+
+Issue a prediction request with 
+
+```shell
+curl -v -H "Host: ${SERVICE_HOSTNAME}" \
+  http://127.0.0.1:80/v2/models/shi-model-pvc:predict \
+  -d @./test-payload.json
 ```

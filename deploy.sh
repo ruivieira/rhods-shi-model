@@ -64,7 +64,7 @@ log "😴 Wait for model storage pod"
 kubectl wait --for=condition=ready pod model-store-pod --timeout=60s
 
 log "Copy model file to pod"
-kubectl cp model/model.joblib model-store-pod:/pv/model.joblib -c model-store
+kubectl cp model/model.bst model-store-pod:/pv/model.joblib -c model-store
 
 log "Deploy model"
-kubectl apply -f manifests/sklearn-pvc.yaml
+kubectl apply -f manifests/shi-model-pvc.yaml
