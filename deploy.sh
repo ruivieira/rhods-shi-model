@@ -21,6 +21,21 @@ minikube addons enable ingress
 log "Enable DNS"
 minikube addons enable ingress-dns
 
+log "Istall Kafka"
+helm repo add confluentinc https://confluentinc.github.io/cp-helm-charts/
+helm repo update
+helm install my-kafka -f manifests/kafka-values.yaml --set cp-schema-registry.enabled=false,cp-kafka-rest.enabled=false,cp-kafka-connect.enabled=false confluentinc/cp-helm-charts
+
+log "Install KNative Eventing Core"
+kubectl apply -f https://github.com/knative/eventing/releases/download/${KNATIVE_VERSION}/eventing-crds.yaml
+kubectl apply -f https://github.com/knative/eventing/releases/download/${KNATIVE_VERSION}/eventing-core.yaml
+
+log "Install Kafka Event Source"
+kubectl apply -f https://github.com/knative-sandbox/eventing-kafka/releases/download/${KNATIVE_VERSION}/source.yaml
+
+log "Set addressable resolver"
+kubectl apply -f manifests/addressable-resolver.yaml
+
 log "Dowload Istio ${ISTIO_VERSION}"
 curl -L https://istio.io/downloadIstio | ISTIO_VERSION=${ISTIO_VERSION} sh -
 
