@@ -9,4 +9,4 @@ spec:
     containers:
       - name: kserve-container
         imagePullPolicy: Never
-        image: docker.io/ruivieira/rhods-shi-model:latest
+        image: dev.local/rhods-shi-model:latest

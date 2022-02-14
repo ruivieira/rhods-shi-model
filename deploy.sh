@@ -13,7 +13,9 @@ CERTMANAGER_VERSION="v1.3.0"
 KOURIER_VERSION="v1.2.0"
 
 log "Start minikube"
-minikube --memory=8192 --cpus=6 --kubernetes-version=v1.22.0 start
+minikube --driver=hyperkit --memory=8192 --cpus=6 --kubernetes-version=v1.22.0 start
+
+eval "$(minikube docker-env)"
 
 log "Enable ingress"
 minikube addons enable ingress
@@ -72,7 +74,7 @@ kubectl apply -f https://github.com/kserve/kserve/releases/download/v0.7.0/kserv
 cd model || exit
 
 log "✨ Build custom model server"
-minikube image build -t ruivieira/rhods-shi-model:latest .
+minikube image build -t dev.local/rhods-shi-model:latest .
 
 cd ..
 
