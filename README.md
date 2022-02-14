@@ -137,7 +137,18 @@ export SERVICE_HOSTNAME=$(kubectl get inferenceservice shi-model-pvc -o jsonpath
 Issue a prediction request with 
 
 ```shell
-curl -v -H "Host: ${SERVICE_HOSTNAME}" \
-  http://127.0.0.1:80/v1/models/rhods-shi-model:predict \
-  -d @./test-payload.json
+curl -v -X POST --location "http://127.0.0.1:80/v1/models/rhods-shi-model:predict" \
+    -H "Host: ${SERVICE_HOSTNAME}" \
+    -H "Content-Type: application/json" \
+    -d '{
+          "specversion": "1.0",
+          "id": "667e258a-8eb9-43b2-9313-22133f2c717e",
+          "source": "example",
+          "type": "org.drools.model.HostLoad",
+          "datacontenttype": "application/json",
+          "time": "2021-12-03T12:34:56Z",
+          "obclienturi": "http://host.docker.internal:3246",
+          "host": "hostA",
+          "currentLoad": 90.0
+        }'
 ```
