@@ -13,13 +13,30 @@ CERTMANAGER_VERSION="v1.3.0"
 KOURIER_VERSION="v1.2.0"
 
 log "Start minikube"
-minikube --memory=8192 --cpus=6 --kubernetes-version=v1.22.0 start
+minikube --driver=hyperkit --memory=8192 --cpus=6 --kubernetes-version=v1.22.0 start
+
+eval "$(minikube docker-env)"
 
 log "Enable ingress"
 minikube addons enable ingress
 
 log "Enable DNS"
 minikube addons enable ingress-dns
+
+log "Istall Kafka"
+helm repo add confluentinc https://confluentinc.github.io/cp-helm-charts/
+helm repo update
+helm install my-kafka -f manifests/kafka-values.yaml --set cp-schema-registry.enabled=false,cp-kafka-rest.enabled=false,cp-kafka-connect.enabled=false confluentinc/cp-helm-charts
+
+log "Install KNative Eventing Core"
+kubectl apply -f https://github.com/knative/eventing/releases/download/${KNATIVE_VERSION}/eventing-crds.yaml
+kubectl apply -f https://github.com/knative/eventing/releases/download/${KNATIVE_VERSION}/eventing-core.yaml
+
+log "Install Kafka Event Source"
+kubectl apply -f https://github.com/knative-sandbox/eventing-kafka/releases/download/${KNATIVE_VERSION}/source.yaml
+
+log "Set addressable resolver"
+kubectl apply -f manifests/addressable-resolver.yaml
 
 log "Dowload Istio ${ISTIO_VERSION}"
 curl -L https://istio.io/downloadIstio | ISTIO_VERSION=${ISTIO_VERSION} sh -
@@ -54,20 +71,12 @@ kubectl wait pod --all --for=condition=Ready --timeout=600s -n cert-manager
 log "✨ Install KServe"
 kubectl apply -f https://github.com/kserve/kserve/releases/download/v0.7.0/kserve.yaml
 
-log "Create persistent volume claim"
-kubectl apply -f manifests/pvc.yaml
+cd model || exit
 
-log "Create persistent volume"
-kubectl apply -f manifests/pv.yaml
+log "✨ Build custom model server"
+minikube image build -t dev.local/rhods-shi-model:latest .
 
-log "Create model storage pod"
-kubectl apply -f manifests/pv-model-store.yaml
-
-log "😴 Wait for model storage pod"
-kubectl wait --for=condition=ready pod model-store-pod --timeout=60s
-
-log "Copy model file to pod"
-kubectl cp model/model.bst model-store-pod:/pv/model.joblib -c model-store
+cd ..
 
 log "Deploy model"
 kubectl apply -f manifests/shi-model-pvc.yaml
