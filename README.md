@@ -99,29 +99,10 @@ You can also run the Jupyter notebook locally as above.
 
 ## Deploying the model
 
-Once the model is trained, we can copy it to a persistent volume in order
-for `KServe` to serve it.
-
-### Persistent volume
-
-Create the persistent volume
+Once the model is trained, we can build the custom predictor image for `KServe` to serve it.
 
 ```shell
-kubectl apply -f manifests/pvc.yaml
-kubectl apply -f manifests/pv.yaml
-```
-
-Create the model storage pod
-
-```shell
-kubectl apply -f manifests/pv-model-store.yaml
-```
-
-Wait for model storage pod, and copy the model file to it, when ready.
-
-```shell
-kubectl wait --for=condition=ready pod model-store-pod --timeout=60s
-kubectl cp model/model.bst model-store-pod:/pv/model.bst -c model-store
+minikube image build -t dev.local/rhods-shi-model:latest .
 ```
 
 ### InferenceService deployment
@@ -157,6 +138,6 @@ Issue a prediction request with
 
 ```shell
 curl -v -H "Host: ${SERVICE_HOSTNAME}" \
-  http://127.0.0.1:80/v2/models/shi-model-pvc:predict \
+  http://127.0.0.1:80/v1/models/rhods-shi-model:predict \
   -d @./test-payload.json
 ```
