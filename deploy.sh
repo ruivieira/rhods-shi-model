@@ -69,20 +69,12 @@ kubectl wait pod --all --for=condition=Ready --timeout=600s -n cert-manager
 log "✨ Install KServe"
 kubectl apply -f https://github.com/kserve/kserve/releases/download/v0.7.0/kserve.yaml
 
-log "Create persistent volume claim"
-kubectl apply -f manifests/pvc.yaml
+cd model || exit
 
-log "Create persistent volume"
-kubectl apply -f manifests/pv.yaml
+log "✨ Build custom model server"
+minikube image build -t ruivieira/rhods-shi-model:latest .
 
-log "Create model storage pod"
-kubectl apply -f manifests/pv-model-store.yaml
-
-log "😴 Wait for model storage pod"
-kubectl wait --for=condition=ready pod model-store-pod --timeout=60s
-
-log "Copy model file to pod"
-kubectl cp model/model.bst model-store-pod:/pv/model.joblib -c model-store
+cd ..
 
 log "Deploy model"
 kubectl apply -f manifests/shi-model-pvc.yaml

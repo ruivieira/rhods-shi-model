@@ -6,6 +6,7 @@ metadata:
     sidecar.istio.io/inject: "false"
 spec:
   predictor:
-    xgboost:
-      protocolVersion: "v2"
-      storageUri: "pvc://task-pv-claim/model.bst"
+    containers:
+      - name: kserve-container
+        imagePullPolicy: Never
+        image: docker.io/ruivieira/rhods-shi-model:latest
