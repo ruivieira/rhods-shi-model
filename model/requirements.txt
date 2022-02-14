@@ -3,3 +3,5 @@ xgboost==1.5.2
 scikit-learn==1.0.2
 numpy
 kserve
+joblib==1.1.0
+cloudevents
