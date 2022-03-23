@@ -110,10 +110,10 @@ minikube image build -t dev.local/rhods-shi-model:latest .
 Deploy model inference service
 
 ```shell
-kubectl apply -f manifests/shi-model-pvc.yaml
+kubectl apply -f k8s/shi-model-pvc.yaml
 ```
 
-You can check the inference service status with 
+You can check the inference service status with
 
 ```shell
 kubectl get inferenceservice shi-model-pvc
